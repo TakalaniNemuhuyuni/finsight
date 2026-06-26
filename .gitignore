@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+dist/
+build/
+*.egg
+
+# Environment variables — never commit these
+.env
+.env.local
+.env.*.local
+
+# Node
+node_modules/
+.next/
+npm-debug.log*
+
+# Docker
+*.log
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
