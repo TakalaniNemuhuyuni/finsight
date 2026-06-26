@@ -1,26 +1,29 @@
-# Quick manual test to verify the pipeline works before wire it into FastAPI in Stage 5
-
+# test_pipeline.py
+# Tests the full pipeline from file ingestion through to ratio calculation
 
 import sys
 sys.path.append(".")
 
 from app.pipeline.ingestion import process_upload
+from app.pipeline.ratios import calculate_all_ratios
 
+# Step 1: Runs the cleaning pipeline
 result = process_upload("sample_data/messy_financials.csv", "messy_financials.csv")
 
 print(f"Pipeline completed successfully")
-print(f"File: {result.source_filename}")
 print(f"Periods found: {result.period_count}")
-print(f"Warnings ({len(result.warnings)}):")
-for w in result.warnings:
-    print(f"   - {w}")
 
-print(f"Cleaned Records:")
-for record in result.records:
-    print(f"\n  {record.period}:")
-    print(f"    Revenue:          R {record.revenue:>15,.2f}")
-    print(f"    Cost of Sales:    R {record.cost_of_sales:>15,.2f}")
-    print(f"    Gross Profit:     R {record.gross_profit:>15,.2f}")
-    print(f"    Net Profit:       R {record.net_profit:>15,.2f}")
-    if record.cash:
-        print(f"    Cash:             R {record.cash:>15,.2f}")
+# Step 2: Calculates ratios
+ratios = calculate_all_ratios(result.records)
+
+print(f"Financial Ratios:")
+for r in ratios:
+    print(f"\n  {r.period}:")
+    print(f"    Gross Profit Margin:     {r.gross_profit_margin}%")
+    print(f"    Net Profit Margin:       {r.net_profit_margin}%")
+    print(f"    Operating Profit Margin: {r.operating_profit_margin}%")
+    print(f"    Cost of Sales Ratio:     {r.cost_of_sales_ratio}%")
+    print(f"    Is Profitable:           {r.is_profitable}")
+    print(f"    Current Ratio:           {r.current_ratio if r.current_ratio else 'Not available'}")
+    print(f"    Debt to Equity:          {r.debt_to_equity if r.debt_to_equity else 'Not available'}")
+    print(f"    Liquidity Healthy:       {r.liquidity_healthy if r.liquidity_healthy is not None else 'Not available'}")
