@@ -7,6 +7,7 @@
 
 import { useState, useEffect } from "react"
 import { Analysis } from "@/types"
+import ReactMarkdown from "react-markdown"
 
 export default function Home() {
 
@@ -136,8 +137,8 @@ export default function Home() {
               <h2 className="text-lg font-semibold text-gray-900 mb-4">
                 Financial Health Report
               </h2>
-              <div className="prose prose-sm max-w-none text-gray-700 whitespace-pre-wrap">
-                {displayedAnalysis.narrative}
+              <div className="prose prose-sm max-w-none text-gray-700">
+                 <ReactMarkdown>{displayedAnalysis.narrative}</ReactMarkdown>
               </div>
             </div>
 
