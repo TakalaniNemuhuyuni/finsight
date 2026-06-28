@@ -24,7 +24,7 @@ export default function Home() {
 
   const fetchHistory = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/analyses")
+      const response = await fetch("https://finsight-production-3ffb.up.railway.app/api/analyses")
       const data = await response.json()
       setHistory(data)
     } catch {
@@ -44,7 +44,7 @@ export default function Home() {
     formData.append("file", file)
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/analyse", {
+      const response = await fetch("https://finsight-production-3ffb.up.railway.app/api/analyse", {
         method: "POST",
         body: formData,
       })
@@ -65,7 +65,7 @@ export default function Home() {
   }
 
   // Decides which analysis to display — either the latest result or a selected history item.
-  
+
   const displayedAnalysis = selectedHistory || result
 
   return (
