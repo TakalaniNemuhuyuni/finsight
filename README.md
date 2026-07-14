@@ -3,15 +3,13 @@
 AI-powered financial statement analyser for South African SMEs.
 
 **Live Demo:** https://finsight-azure.vercel.app  
-**API Docs:** https://finsight-production-3ffb.up.railway.app/docs
 
-> Note: The backend is hosted on Railway's free tier and may take a moment to wake up if it has been idle.
 
 ---
 
 ## The Business Problem
 
-Small and medium enterprises make up over 90% of registered businesses in South Africa, yet most SME owners cannot afford a financial analyst and find bank-generated reports confusing. Before approaching a lender like Absa or Nedbank for credit, an SME owner needs to understand their own financial health — but the raw numbers from their accounting software tell them very little without interpretation.
+Small and medium enterprises make up over 90% of registered businesses in South Africa, yet most SME owners cannot afford a financial analyst and find bank-generated reports confusing. Before approaching a lender like Absa or Nedbank for credit, an SME owner needs to understand their own financial health but the raw numbers from their accounting software tell them very little without interpretation.
 
 FinSight solves this by accepting a financial statement export from any major South African accounting package, cleaning and normalising the messy real-world data, calculating standard financial ratios, and using the Gemini AI API to generate a plain English narrative that the business owner can read, understand, and act on immediately.
 
