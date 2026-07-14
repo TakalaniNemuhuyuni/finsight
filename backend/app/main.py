@@ -161,3 +161,15 @@ def get_analysis(analysis_id: int, db: Session = Depends(get_db)):
         "ratios": analysis.ratios,
         "warnings": analysis.warnings,
     }
+
+@app.delete("/api/analyses/{analysis_id}")
+def delete_analysis(analysis_id: int, db: Session = Depends(get_db)):
+    """
+    Deletes a single analysis by ID.
+    """
+    analysis = db.query(Analysis).filter(Analysis.id == analysis_id).first()
+    if not analysis:
+        raise HTTPException(status_code=404, detail="Analysis not found")
+    db.delete(analysis)
+    db.commit()
+    return {"message": "Analysis deleted successfully"}

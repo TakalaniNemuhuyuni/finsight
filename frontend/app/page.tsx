@@ -57,6 +57,7 @@ export default function Home() {
 
       const data: Analysis = await response.json()
       setResult(data)
+      setFile(null)
       fetchHistory() // Refresh history after new analysis
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong")
@@ -93,13 +94,14 @@ export default function Home() {
 
           <div className="flex items-center gap-4">
             <input
-              type="file"
-              accept=".csv,.xlsx,.xls"
-              onChange={(e) => setFile(e.target.files?.[0] || null)}
-              className="text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 
-                         file:rounded file:border-0 file:text-sm file:font-medium
-                         file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-            />
+  type="file"
+  accept=".csv,.xlsx,.xls"
+  key={file ? "has-file" : "no-file"}
+  onChange={(e) => setFile(e.target.files?.[0] || null)}
+  className="text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 
+             file:rounded file:border-0 file:text-sm file:font-medium
+             file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+/>
             <button
               onClick={handleUpload}
               disabled={!file || loading}
@@ -215,39 +217,70 @@ export default function Home() {
         )}
 
         {/* History Section */}
-        {history.length > 0 && (
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
-              Analysis History
-            </h2>
-            <div className="space-y-2">
-              {history.map((analysis) => (
-                <button
-                  key={analysis.id}
-                  onClick={() => setSelectedHistory(analysis)}
-                  className="w-full text-left px-4 py-3 rounded border border-gray-200 
-                             hover:bg-gray-50 transition-colors"
-                >
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium text-gray-900">
-                      {analysis.filename}
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      {analysis.period_count} periods
-                    </span>
-                  </div>
-                  {analysis.created_at && (
-                    <div className="text-xs text-gray-400 mt-0.5">
-                      {new Date(analysis.created_at).toLocaleDateString("en-ZA")}
-                    </div>
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+<div className="bg-white rounded-lg border border-gray-200 p-6">
+  <h2 className="text-lg font-semibold text-gray-900 mb-4">
+    Analysis History
+  </h2>
 
-      </div>
+  {history.length === 0 ? (
+    <div className="text-center py-8">
+      <p className="text-sm text-gray-400">
+        No analyses yet. Upload a financial statement above to get started.
+      </p>
+    </div>
+  ) : (
+    <div className="space-y-2">
+      {history.map((analysis) => (
+        <div
+          key={analysis.id}
+          className="flex items-start justify-between px-4 py-3 rounded border border-gray-200 hover:bg-gray-50 transition-colors"
+        >
+          <button
+            className="flex-1 text-left"
+            onClick={() => setSelectedHistory(analysis)}
+          >
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium text-gray-900">
+                {analysis.filename}
+              </span>
+              <span className="text-xs text-gray-500 ml-4">
+                {analysis.period_count} periods
+              </span>
+            </div>
+            {analysis.created_at && (
+              <div className="text-xs text-gray-400 mt-0.5">
+                {new Date(analysis.created_at).toLocaleDateString("en-ZA")}
+              </div>
+            )}
+            <p className="text-xs text-gray-500 mt-1 line-clamp-2">
+              {analysis.narrative.replace(/\*\*/g, "").substring(0, 120)}...
+            </p>
+          </button>
+
+          <button
+            onClick={async () => {
+              try {
+                await fetch(`https://finsight-production-3ffb.up.railway.app/api/analyses/${analysis.id}`, {
+                  method: "DELETE",
+                })
+                setHistory(history.filter((a) => a.id !== analysis.id))
+                if (selectedHistory?.id === analysis.id) {
+                  setSelectedHistory(null)
+                }
+              } catch {
+                // If delete fails, do nothing
+              }
+            }}
+            className="ml-4 mt-1 text-xs text-red-400 hover:text-red-600 transition-colors flex-shrink-0"
+          >
+            Delete
+          </button>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+</div>
     </main>
   )
 }
